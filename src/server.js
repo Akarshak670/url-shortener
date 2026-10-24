@@ -1,9 +1,11 @@
+const path = require('path');
 const express = require('express');
 const { nanoid } = require('nanoid');
 const db = require('./db');
 
 const app = express();
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 const PORT = process.env.PORT || 3000;
 const CODE_LENGTH = 7;
@@ -51,6 +53,22 @@ app.post('/api/shorten', (req, res) => {
     shortUrl: `${req.protocol}://${req.get('host')}/${row.code}`,
     createdAt: row.created_at,
   });
+});
+
+// List all links, newest first
+app.get('/api/links', (req, res) => {
+  const rows = db
+    .prepare('SELECT code, url, clicks, created_at FROM links ORDER BY created_at DESC, code DESC LIMIT 200')
+    .all();
+  res.json(
+    rows.map((row) => ({
+      code: row.code,
+      url: row.url,
+      clicks: row.clicks,
+      createdAt: row.created_at,
+      shortUrl: `${req.protocol}://${req.get('host')}/${row.code}`,
+    }))
+  );
 });
 
 // Stats for a short link

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>URL Shortener</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <h1>URL Shortener</h1>
+      <p>Paste a long link, get a short one.</p>
+    </header>
+
+    <form id="shorten-form" class="card form">
+      <div class="field">
+        <label for="url">Long URL</label>
+        <input id="url" name="url" type="url" placeholder="https://example.com/some/long/path" required />
+      </div>
+      <div class="field field-code">
+        <label for="code">Custom code <span class="optional">(optional)</span></label>
+        <input id="code" name="code" type="text" placeholder="my-link" pattern="[A-Za-z0-9_-]{3,32}" />
+      </div>
+      <button type="submit" id="submit-btn">Shorten</button>
+    </form>
+
+    <p id="form-error" class="error" role="alert" hidden></p>
+
+    <section id="result" class="card result" hidden>
+      <span class="result-label">Your short link</span>
+      <div class="result-row">
+        <a id="result-link" href="#" target="_blank" rel="noopener"></a>
+        <button type="button" id="copy-btn" class="icon-btn" aria-label="Copy short link">Copy</button>
+      </div>
+    </section>
+
+    <section class="links-section">
+      <div class="links-header">
+        <h2>Your links</h2>
+        <button type="button" id="refresh-btn" class="text-btn">Refresh</button>
+      </div>
+      <div id="links-empty" class="empty" hidden>No links yet — create one above.</div>
+      <div class="table-wrap">
+        <table id="links-table" hidden>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Original URL</th>
+              <th>Clicks</th>
+              <th>Created</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="links-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
