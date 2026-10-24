@@ -17,6 +17,10 @@ PORT=4000 npm start
 
 Data is stored in a local SQLite file, `data.sqlite`, created automatically on first run.
 
+## Web UI
+
+Open `http://localhost:3000/` in a browser for a simple UI: paste a URL (and an optional custom code), shorten it, copy the result, and browse/copy previously created links with their click counts. It's static files in `public/`, served by Express, calling the JSON API below.
+
 ## How it works
 
 - Each shortened URL gets a unique `code` — either a random 7-character ID (via `nanoid`) or a custom code you supply.
@@ -57,6 +61,12 @@ Redirects (302) to the original URL for `code`, and increments its click count.
 
 - `404` if `code` doesn't exist.
 
+### `GET /api/links`
+
+List all links, newest first (used by the UI).
+
+**Response `200`:** array of objects shaped like the `POST /api/shorten` response.
+
 ### `GET /api/stats/:code`
 
 Returns usage info for a short link.
@@ -92,8 +102,12 @@ curl http://localhost:3000/api/stats/<code>
 
 ```
 src/
-  server.js   # Express app: routes for shorten, redirect, stats
+  server.js   # Express app: routes for shorten, redirect, stats, static UI
   db.js       # SQLite connection + schema setup
+public/
+  index.html  # UI markup
+  styles.css  # UI styling
+  app.js      # UI logic (calls the JSON API)
 package.json
 data.sqlite   # created at runtime, not committed (see .gitignore)
 ```
@@ -102,4 +116,4 @@ data.sqlite   # created at runtime, not committed (see .gitignore)
 
 - There's no authentication — anyone who can reach the server can create and read links.
 - Codes are case-sensitive; double-check for look-alike characters (`0`/`O`, `1`/`l`) when typing one by hand.
-- Not yet implemented: link expiry, deleting links, rate limiting, or a UI.
+- Not yet implemented: link expiry, deleting links, rate limiting.
